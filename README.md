@@ -11,7 +11,7 @@ If you want to install the package directly from Github, I recommend to use the 
 
 ```R
 library(devtools)
-install_github('zhang570221322/R/package')
+install_github('zhang570221322/R/package_Name')
 ```
 
 
