@@ -23,6 +23,7 @@ install_github('zhang570221322/R/mMarker')
 library(progress)
 library(stringr)
 data=read.table("findmarker.xls",header=T,sep="\t")
+#Single_cell_markers.txt:wget http://biocc.hrbmu.edu.cn/CellMarker/download/Single_cell_markers.txt
 marker_Data=read.table("Single_cell_markers.txt",,header=T,sep="\t")
 #input data(data.frame):findmarker.xls ,marker_Data(data.frame):Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
 #output Matrix(cluster1,cluster2,.....)
