@@ -1,0 +1,10 @@
+Package: mMarker
+Type: Package
+Title: to match maker for the cellNames
+Version: 0.1.0
+Author: zwl
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: to match maker for the cellNames
+License: GPL
+Encoding: UTF-8
+LazyData: true
