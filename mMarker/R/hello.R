@@ -36,8 +36,8 @@ My_Print=function(n=1,info){
 #select top n in every cluster ,
 #input  data:frame
 #output return a matrix(col:genes,colname:clusters)
-Select_Top_N=function(data,topn=20){
-  return_Matrix=matrix(NA,20,0)
+Select_Top_N=function(data,topn){
+  return_Matrix=matrix(NA,topn,0)
   clusters=sort(unique(data$cluster))
   for (cluster_Id in clusters){
     return_Matrix=cbind(return_Matrix,(data[data$cluster==cluster_Id,])[1:topn,]$gene)
@@ -86,17 +86,16 @@ Match_Marker=function(gene_Name,marker_Data){
 # setClass("Cluster_Marker",slots=list(cluster_Id="character",gene_Top_N="list",marker_Info="matrix",marker_Info_Frequency="matrix"))
 
 #handle  frequency
-Handle_Frequency=function(data,freq=10){
+Handle_Frequency=function(data,freq){
+  #count times
   for(cell_Name in unique(unlist(data$cellName))){
 
     data[data$cellName==cell_Name,]$frequency=dim(data[data$cellName==cell_Name,])[1]
   }
   #flter > 10
-  data=data[as.numeric(data$frequency)>=10,]
+  data=data[as.numeric(data$frequency)>=as.numeric(freq),]
   output_Data=matrix(NA,0,6)
   for (cell_Name  in unique(data$cellName)){
-
-
     data[data$cellName==cell_Name,][1,]$match_gene=paste(unlist(data[data$cellName==cell_Name,]$match_gene)," ",collapse=",")
     output_Data=rbind(output_Data,data[data$cellName==cell_Name,][1,])
   }
@@ -108,7 +107,7 @@ Handle_Frequency=function(data,freq=10){
 #input data:findmarker.xls ,marker_Data:Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
 #output Matrix(cluster1,cluster2,.....)
 Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
-  matrix_Top_N=Select_Top_N(data,topn)
+  matrix_Top_N=Select_Top_N(data,topn=topn)
   My_Print(1,paste("select matrix_Top_",topn,sep=""))
 
   output_Martix=matrix(NA,0,17);
@@ -142,7 +141,7 @@ Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
     #select data
     marker_Info=data.frame(marker_Info$cellName,marker_Info$cluster_Id,marker_Info$match_gene,marker_Info$frequency,marker_Info$CellOntologyID,marker_Info$UberonOntologyID)
     colnames(marker_Info)=c("cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
-    marker_Info=Handle_Frequency(marker_Info,freq)
+    marker_Info=Handle_Frequency(marker_Info,freq=freq)
     output_Martix2=rbind(output_Martix2,marker_Info)
   }
   colnames(output_Martix2)=c("cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
