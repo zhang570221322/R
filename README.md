@@ -1,12 +1,11 @@
-# R
-## Description
+# Description
 R package
 
-## Installation
+# Installation
 
 Installation should take less than 5 min. 
 
-### Via Github and devtools
+## Via Github and devtools
 
 If you want to install the package directly from Github, I recommend to use the `devtools` package.
 
@@ -15,14 +14,14 @@ library(devtools)
 install_github('zhang570221322/R/package')
 ```
 
----
-### mMarker
+
+## mMarker
 
 ```R
 library(devtools)
 install_github('zhang570221322/R/mMarker')
 library(progress)
-library(string)
+library(stringr)
 data=read.table("findmarker.xls",header=T,sep="\t")
 marker_Data=read.table("Single_cell_markers.txt",,header=T,sep="\t")
 #input data(data.frame):findmarker.xls ,marker_Data(data.frame):Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
@@ -30,13 +29,13 @@ marker_Data=read.table("Single_cell_markers.txt",,header=T,sep="\t")
 match_Marker_data=Get_Cluster_Marker_Matrix(data,markerData,topn=10,freq=10)
 ```
 
----
-
-## Contributing guidelines
 
 
+# Contributing guidelines
 
-## Versioned templates
+
+
+# Versioned templates
 
 
 
@@ -47,6 +46,6 @@ None
 
 
 
-## License
+# License
 
 [GPL-3.0](./LICENSE).
