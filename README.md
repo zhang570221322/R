@@ -21,7 +21,6 @@ install_github('zhang570221322/R/package_Name')
 library(devtools)
 install_github('zhang570221322/R/mMarker')
 library(progress)
-library(stringr)
 options(stringsAsFactors = FALSE)
 data=read.table("findmarker.xls",header=T,sep="\t")
 #Single_cell_markers.txt:wget http://biocc.hrbmu.edu.cn/CellMarker/download/Single_cell_markers.txt

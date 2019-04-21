@@ -47,7 +47,21 @@ Select_Top_N=function(data,topn=20){
   return_Matrix
 }
 
-#Match_Marker()
+#List_Logic_And()
+#input list(T,F,....)
+#process &
+#return T or F
+List_Logic_And=function(list){
+  return_Logic_Value=F
+  for(logic_Value in list){
+      return_Logic_Value=return_Logic_Value||logic_Value
+  }
+  return_Logic_Value
+  
+}
+
+
+#Match_Marker() 
 #input: gene_Name(character) ,marker_Data(frame)
 #output:  match_marker_Data
 Match_Marker=function(gene_Name,marker_Data){
@@ -57,11 +71,11 @@ Match_Marker=function(gene_Name,marker_Data){
   #init output
   output_Martix=matrix(NA,0,17);
   for (i in 1:dim(marker_Data)[1]) {
-
-    if(stringr::str_detect(marker_Data$cellMarker[i],gene_Name)){
-      marker_Data[i,]$match_gene=gene_Name
-      marker_Data[i,]$frequency=1
-      output_Martix=rbind(output_Martix,marker_Data[i,])
+  list=gsub(" ","",unlist(strsplit(marker_Data$cellMarker[i],",")))%in%gene_Name
+  if(List_Logic_And(list)){
+    marker_Data[i,]$match_gene=gene_Name
+    marker_Data[i,]$frequency=1
+    output_Martix=rbind(output_Martix,marker_Data[i,])
     }
   }
   output_Martix
