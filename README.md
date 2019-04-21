@@ -1,5 +1,5 @@
-#R
-##Description
+# R
+## Description
 R package
 
 ## Installation
@@ -16,13 +16,15 @@ install_github('zhang570221322/R/package')
 ```
 
 ---
-###mMarker
+### mMarker
 
 ```R
 library(devtools)
 install_github('zhang570221322/R/mMarker')
 library(progress)
 library(string)
+data=read.table("findmarker.xls",header=T,sep="\t")
+marker_Data=read.table("Single_cell_markers.txt",,header=T,sep="\t")
 #input data(data.frame):findmarker.xls ,marker_Data(data.frame):Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
 #output Matrix(cluster1,cluster2,.....)
 match_Marker_data=Get_Cluster_Marker_Matrix(data,markerData,topn=10,freq=10)
@@ -42,7 +44,7 @@ match_Marker_data=Get_Cluster_Marker_Matrix(data,markerData,topn=10,freq=10)
 None
 ```
 
-## Contributing workflow
+
 
 
 ## License
