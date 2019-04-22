@@ -103,8 +103,9 @@ Handle_Frequency=function(data,freq){
     data[data$Id==Id,][1,]$match_gene=paste(unlist(data[data$Id==Id,]$match_gene)," ",collapse=",")
     output_Data=rbind(output_Data,data[data$Id==Id,][1,])
   }
-   output_Data=output_Data[output_Data$speciesType=="Human",]
    output_Data=as.data.frame(output_Data)
+   output_Data=output_Data[output_Data$speciesType=="Human",]
+  
    output_Data=data.frame(output_Data$tissueType,output_Data$PMID,output_Data$cellName,output_Data$cluster_Id,output_Data$match_gene,output_Data$frequency,output_Data$CellOntologyID,output_Data$UberonOntologyID)
   output_Data
 }
