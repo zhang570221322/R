@@ -109,7 +109,7 @@ Handle_Frequency=function(data,freq,topfreqn,isTopfreqn){
   
    output_Data=data.frame(output_Data$tissueType,output_Data$PMID,output_Data$cellName,output_Data$cluster_Id,output_Data$match_gene,output_Data$frequency,output_Data$CellOntologyID,output_Data$UberonOntologyID)
     if(as.numeric(dim(output_Data))[1]==0){
-    	output_Data=matrix(NA,0,11)
+    	output_Data=matrix(NA,0,8)
     	output_Data=as.data.frame(output_Data)
    		output_Data[1,]=NA
    }
@@ -119,6 +119,7 @@ Handle_Frequency=function(data,freq,topfreqn,isTopfreqn){
     output_Data=output_Data[order(output_Data[,6],decreasing=T),]
     output_Data=output_Data[1:as.numeric(topfreqn),]
    }
+    # output_Data=output_Data[!(is.na(output_Data$cellName=="NA")),]
   output_Data
 }
 
