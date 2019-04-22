@@ -54,8 +54,12 @@ Select_Top_N=function(data,topn){
 List_Logic_And=function(list){
   return_Logic_Value=F
   for(logic_Value in list){
+      if(!return_Logic_Value){
       return_Logic_Value=return_Logic_Value||logic_Value
-  }
+      }else{
+        break
+      }
+   }
   return_Logic_Value
   
 }
@@ -69,7 +73,7 @@ Match_Marker=function(gene_Name,marker_Data){
   marker_Data$match_gene=NA
   marker_Data$frequency=NA
   #init output
-  output_Martix=matrix(NA,0,17);
+  output_Martix=matrix(NA,0,18);
   for (i in 1:dim(marker_Data)[1]) {
   list=gsub(" ","",unlist(strsplit(marker_Data$cellMarker[i],",")))%in%gene_Name
   if(List_Logic_And(list)){
@@ -88,18 +92,19 @@ Match_Marker=function(gene_Name,marker_Data){
 #handle  frequency
 Handle_Frequency=function(data,freq){
   #count times
-  for(cell_Name in unique(unlist(data$cellName))){
+  for(Id in unique(unlist(data$Id))){
 
-    data[data$cellName==cell_Name,]$frequency=dim(data[data$cellName==cell_Name,])[1]
+    data[data$Id==Id,]$frequency=dim(data[data$Id==Id,])[1]
   }
   #flter > 10
   data=data[as.numeric(data$frequency)>=as.numeric(freq),]
   output_Data=matrix(NA,0,6)
-  for (cell_Name  in unique(data$cellName)){
-    data[data$cellName==cell_Name,][1,]$match_gene=paste(unlist(data[data$cellName==cell_Name,]$match_gene)," ",collapse=",")
-    output_Data=rbind(output_Data,data[data$cellName==cell_Name,][1,])
+  for (Id  in unique(data$Id)){
+    data[data$Id==Id,][1,]$match_gene=paste(unlist(data[data$Id==Id,]$match_gene)," ",collapse=",")
+    output_Data=rbind(output_Data,data[data$Id==Id,][1,])
   }
-
+   output_Data=output_Data[output_Data$speciesType=="Human",]
+   output_Data=data.frame(output_Data$tissueType,output_Data$PMID,output_Data$cellName,output_Data$cluster_Id,output_Data$match_gene,output_Data$frequency,output_Data$CellOntologyID,output_Data$UberonOntologyID)
   output_Data
 }
 
@@ -109,8 +114,8 @@ Handle_Frequency=function(data,freq){
 Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
   matrix_Top_N=Select_Top_N(data,topn=topn)
   My_Print(1,paste("select matrix_Top_",topn,sep=""))
-
-  output_Martix=matrix(NA,0,17);
+  marker_Data$Id=c(1:dim(marker_Data)[1])
+  output_Martix=matrix(NA,0,18);
   gene_List=list()
 
   for(col_Index in 1:dim(matrix_Top_N)[2]){
@@ -132,19 +137,19 @@ Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
   output_Martix=as.data.frame(output_Martix)
   for(col_Index in 1:dim(matrix_Top_N)[2]){
     gene_List2=unlist(matrix_Top_N[,col_Index])
-    marker_Info=matrix(NA,0,17);
+    marker_Info=matrix(NA,0,18);
     for(gene_Name2 in gene_List2){
       foo2= output_Martix[output_Martix$match_gene==gene_Name2,]
       marker_Info=rbind(marker_Info,foo2)
     }
     marker_Info$cluster_Id=colnames(matrix_Top_N)[col_Index]
     #select data
-    marker_Info=data.frame(marker_Info$cellName,marker_Info$cluster_Id,marker_Info$match_gene,marker_Info$frequency,marker_Info$CellOntologyID,marker_Info$UberonOntologyID)
-    colnames(marker_Info)=c("cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
+    marker_Info=data.frame(marker_Info$Id,marker_Info$speciesType,marker_Info$tissueType,marker_Info$cellType,marker_Info$PMID,marker_Info$cellName,marker_Info$cluster_Id,marker_Info$match_gene,marker_Info$frequency,marker_Info$CellOntologyID,marker_Info$UberonOntologyID)
+    colnames(marker_Info)=c("Id","speciesType","tissueType","cellType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
     marker_Info=Handle_Frequency(marker_Info,freq=freq)
     output_Martix2=rbind(output_Martix2,marker_Info)
   }
-  colnames(output_Martix2)=c("cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
+  colnames(output_Martix2)=c("tissueType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
 
   output_Martix2
 
