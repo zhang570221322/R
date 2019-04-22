@@ -90,14 +90,15 @@ Match_Marker=function(gene_Name,marker_Data){
 # setClass("Cluster_Marker",slots=list(cluster_Id="character",gene_Top_N="list",marker_Info="matrix",marker_Info_Frequency="matrix"))
 
 #handle  frequency
-Handle_Frequency=function(data,freq){
+Handle_Frequency=function(data,freq,topfreqn,isTopfreqn){
   #count times
   for(Id in unique(unlist(data$Id))){
-
     data[data$Id==Id,]$frequency=dim(data[data$Id==Id,])[1]
   }
   #flter > 10
+  if(!isTopfreqn){
   data=data[as.numeric(data$frequency)>=as.numeric(freq),]
+  }
   output_Data=matrix(NA,0,6)
   for (Id  in unique(data$Id)){
     data[data$Id==Id,][1,]$match_gene=paste(unlist(data[data$Id==Id,]$match_gene)," ",collapse=",")
@@ -105,15 +106,21 @@ Handle_Frequency=function(data,freq){
   }
    output_Data=as.data.frame(output_Data)
    output_Data=output_Data[output_Data$speciesType=="Human",]
-  
    output_Data=data.frame(output_Data$tissueType,output_Data$PMID,output_Data$cellName,output_Data$cluster_Id,output_Data$match_gene,output_Data$frequency,output_Data$CellOntologyID,output_Data$UberonOntologyID)
+   colnames(output_Data)=c("tissueType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
+   if(isTopfreqn){
+    output_Data$frequency=as.numeric(output_Data$frequency)
+    output_Data[order(output_Data[,6],decreasing=T),]
+    output_Data=output_Data[1:as.numeric(topfreqn),]
+   }
   output_Data
 }
 
 
-#input data:findmarker.xls ,marker_Data:Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
+#input data:findmarker.xls ,marker_Data:Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency,topfreqn(4):4,isTopfreqn=T
 #output Matrix(cluster1,cluster2,.....)
-Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
+#description isTopfreqn, if isTopfreqn is true,then the  freq of pqrameter is  invalid ,and the  topfreqn of pqrameter is valid.
+Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10,topfreqn=4,isTopfreqn=T){
   matrix_Top_N=Select_Top_N(data,topn=topn)
   My_Print(1,paste("select matrix_Top_",topn,sep=""))
   marker_Data$Id=c(1:dim(marker_Data)[1])
@@ -148,7 +155,7 @@ Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10){
     #select data
     marker_Info=data.frame(marker_Info$Id,marker_Info$speciesType,marker_Info$tissueType,marker_Info$cellType,marker_Info$PMID,marker_Info$cellName,marker_Info$cluster_Id,marker_Info$match_gene,marker_Info$frequency,marker_Info$CellOntologyID,marker_Info$UberonOntologyID)
     colnames(marker_Info)=c("Id","speciesType","tissueType","cellType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
-    marker_Info=Handle_Frequency(marker_Info,freq=freq)
+    marker_Info=Handle_Frequency(marker_Info,freq,topfreqn,isTopfreqn)
     output_Martix2=rbind(output_Martix2,marker_Info)
   }
   colnames(output_Martix2)=c("tissueType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")

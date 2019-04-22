@@ -28,8 +28,9 @@ options(stringsAsFactors = FALSE)
 data=read.table("findmarker.xls",header=T,sep="\t")
 #Single_cell_markers.txt:wget http://biocc.hrbmu.edu.cn/CellMarker/download/Single_cell_markers.txt
 marker_Data=read.table("Single_cell_markers.txt",,header=T,sep="\t")
-#input data(data.frame):findmarker.xls ,marker_Data(data.frame):Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency
+#input data:findmarker.xls ,marker_Data:Single_cell_markers.txt , topn(20):select var gene , freq(10):maker frequency,topfreqn(4):4,isTopfreqn=T
 #output Matrix(cluster1,cluster2,.....)
+#description isTopfreqn, if isTopfreqn is true,then the  freq of pqrameter is  invalid ,and the  topfreqn of pqrameter is valid.
 match_Marker_data=Get_Cluster_Marker_Matrix(data,marker_Data,topn=20,freq=10)
 write.table(match_Marker_data,"out_data.xls",sep="\t")
 ```
