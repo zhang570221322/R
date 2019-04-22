@@ -95,22 +95,28 @@ Handle_Frequency=function(data,freq,topfreqn,isTopfreqn){
   for(Id in unique(unlist(data$Id))){
     data[data$Id==Id,]$frequency=dim(data[data$Id==Id,])[1]
   }
-  #flter > 10
+  #flter > freq
   if(!isTopfreqn){
   data=data[as.numeric(data$frequency)>=as.numeric(freq),]
   }
-  output_Data=matrix(NA,0,6)
+  output_Data=matrix(NA,0,11)
   for (Id  in unique(data$Id)){
     data[data$Id==Id,][1,]$match_gene=paste(unlist(data[data$Id==Id,]$match_gene)," ",collapse=",")
     output_Data=rbind(output_Data,data[data$Id==Id,][1,])
   }
    output_Data=as.data.frame(output_Data)
    output_Data=output_Data[output_Data$speciesType=="Human",]
+  
    output_Data=data.frame(output_Data$tissueType,output_Data$PMID,output_Data$cellName,output_Data$cluster_Id,output_Data$match_gene,output_Data$frequency,output_Data$CellOntologyID,output_Data$UberonOntologyID)
+    if(as.numeric(dim(output_Data))[1]==0){
+    	output_Data=matrix(NA,0,11)
+    	output_Data=as.data.frame(output_Data)
+   		output_Data[1,]=NA
+   }
    colnames(output_Data)=c("tissueType","PMID","cellName","cluster_Id","match_gene","frequency","CellOntologyID","UberonOntologyID")
    if(isTopfreqn){
     output_Data$frequency=as.numeric(output_Data$frequency)
-    output_Data[order(output_Data[,6],decreasing=T),]
+    output_Data=output_Data[order(output_Data[,6],decreasing=T),]
     output_Data=output_Data[1:as.numeric(topfreqn),]
    }
   output_Data
