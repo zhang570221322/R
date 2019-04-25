@@ -153,6 +153,8 @@ Get_Cluster_Marker_Matrix=function(data,marker_Data,topn=20,freq=10,topfreqn=4,i
   output_Martix=as.data.frame(output_Martix)
   for(col_Index in 1:dim(matrix_Top_N)[2]){
     gene_List2=unlist(matrix_Top_N[,col_Index])
+    #some marker top n is less n,thus it includes NA ,  handle this (remove NA)
+    gene_List2=gene_List2[!is.na(gene_List2)]
     marker_Info=matrix(NA,0,18);
     for(gene_Name2 in gene_List2){
       foo2= output_Martix[output_Martix$match_gene==gene_Name2,]
