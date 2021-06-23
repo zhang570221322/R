@@ -1,5 +1,5 @@
 # Description
-R package
+R package For the R Script
 
 # Installation
 
